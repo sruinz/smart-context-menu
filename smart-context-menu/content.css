@@ -1,0 +1,76 @@
+.smart-context-menu {
+  position: absolute;
+  z-index: 999999;
+  background: #1e1e1e;
+  border: 1px solid #3a3a3a;
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  padding: 4px;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.2s, transform 0.2s;
+  pointer-events: none;
+}
+
+.smart-context-menu.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+
+.menu-buttons {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.menu-button {
+  background: #2a2a2a;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+}
+
+.menu-button:hover {
+  background: #3a3a3a;
+  transform: scale(1.05);
+}
+
+.menu-button:active {
+  transform: scale(0.95);
+}
+
+.button-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.smart-toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: #2a2a2a;
+  color: #e0e0e0;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 1px solid #3a3a3a;
+  z-index: 1000000;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+  pointer-events: none;
+}
+
+.smart-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
