@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+
+# Generated images
+Gemini_Generated_Image_*.png
+
+# Distribution packages
+*.zip
+
+# Screenshots and examples
+ex.jpg
+screenshot.png

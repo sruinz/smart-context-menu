@@ -9,18 +9,43 @@ const defaultEngines = [
   { name: 'Google 번역', url: 'https://translate.google.com/?sl=auto&tl=ko&text=%s', icon: '🌐' }
 ];
 
+// URL 감지 함수
+function isValidUrl(text) {
+  const trimmed = text.trim();
+
+  // 1) http:// 또는 https:// 로 시작
+  if (/^https?:\/\/[^\s]+$/i.test(trimmed)) return true;
+
+  // 2) www.로 시작
+  if (/^www\.[^\s]+$/i.test(trimmed)) return true;
+
+  // 3) 도메인 형식 (예: google.com, bit.ly/xyz, t.co/abc)
+  // 최소 2글자 도메인 + TLD, 슬래시나 끝으로 종료
+  const domainPattern = /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z]{2,})+([\/][^\s]*)?$/i;
+  return domainPattern.test(trimmed);
+}
+
+// URL 정규화 함수 (프로토콜 없으면 https:// 추가)
+function normalizeUrl(text) {
+  const trimmed = text.trim();
+  if (!/^https?:\/\//i.test(trimmed)) {
+    return 'https://' + trimmed;
+  }
+  return trimmed;
+}
+
 // 미니 메뉴 생성
 function createMiniMenu() {
   const menu = document.createElement('div');
   menu.id = 'smart-context-menu';
   menu.className = 'smart-context-menu';
-  
+
   const buttonContainer = document.createElement('div');
   buttonContainer.className = 'menu-buttons';
-  
+
   menu.appendChild(buttonContainer);
   document.body.appendChild(menu);
-  
+
   return menu;
 }
 
@@ -33,10 +58,10 @@ async function loadSearchEngines() {
 // 메뉴 버튼 업데이트
 async function updateMenuButtons() {
   if (!miniMenu) return;
-  
+
   const buttonContainer = miniMenu.querySelector('.menu-buttons');
   buttonContainer.innerHTML = '';
-  
+
   // 복사 버튼
   const copyBtn = createButton('📋', '복사', () => {
     navigator.clipboard.writeText(selectedText);
@@ -44,7 +69,17 @@ async function updateMenuButtons() {
     hideMiniMenu();
   });
   buttonContainer.appendChild(copyBtn);
-  
+
+  // URL인 경우 바로가기 버튼 추가
+  if (isValidUrl(selectedText)) {
+    const shortcutBtn = createButton('🔗', '바로가기', () => {
+      const url = normalizeUrl(selectedText);
+      window.open(url, '_blank');
+      hideMiniMenu();
+    });
+    buttonContainer.appendChild(shortcutBtn);
+  }
+
   // 검색 엔진 버튼들
   const engines = await loadSearchEngines();
   engines.forEach(engine => {
@@ -73,11 +108,11 @@ function showToast(message) {
   toast.className = 'smart-toast';
   toast.textContent = message;
   document.body.appendChild(toast);
-  
+
   setTimeout(() => {
     toast.classList.add('show');
   }, 10);
-  
+
   setTimeout(() => {
     toast.classList.remove('show');
     setTimeout(() => toast.remove(), 300);
@@ -89,25 +124,25 @@ async function showMiniMenu(x, y) {
   if (!miniMenu) {
     miniMenu = createMiniMenu();
   }
-  
+
   await updateMenuButtons();
-  
+
   // 위치 조정 (화면 밖으로 나가지 않도록)
   const menuWidth = 200;
   const menuHeight = 40;
-  
+
   let left = x;
   let top = y - menuHeight - 10;
-  
+
   if (left + menuWidth > window.innerWidth) {
     left = window.innerWidth - menuWidth - 10;
   }
-  
+
   // 위쪽 공간이 부족하면 아래에 표시
   if (top < 0) {
     top = y + 10;
   }
-  
+
   miniMenu.style.left = `${left}px`;
   miniMenu.style.top = `${top}px`;
   miniMenu.classList.add('show');
@@ -126,28 +161,28 @@ document.addEventListener('mouseup', (e) => {
     // 입력 필드에서는 메뉴 표시 안 함
     const target = e.target;
     if (target && (
-      target.tagName === 'INPUT' || 
-      target.tagName === 'TEXTAREA' || 
+      target.tagName === 'INPUT' ||
+      target.tagName === 'TEXTAREA' ||
       target.isContentEditable
     )) {
       hideMiniMenu();
       return;
     }
-    
+
     const selection = window.getSelection();
     const text = selection.toString().trim();
-    
+
     if (text.length > 0) {
       selectedText = text;
       const range = selection.getRangeAt(0);
       const rect = range.getBoundingClientRect();
-      
+
       // rect가 유효한지 확인 (width나 height가 0이면 무시)
       if (rect.width === 0 || rect.height === 0) {
         hideMiniMenu();
         return;
       }
-      
+
       showMiniMenu(rect.left + window.scrollX, rect.top + window.scrollY);
     } else {
       hideMiniMenu();
