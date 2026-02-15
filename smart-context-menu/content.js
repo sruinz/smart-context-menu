@@ -41,7 +41,7 @@ function createMiniMenu() {
   menu.className = 'smart-context-menu';
 
   const buttonContainer = document.createElement('div');
-  buttonContainer.className = 'menu-buttons';
+  buttonContainer.className = 'scm-menu-buttons';
 
   menu.appendChild(buttonContainer);
   document.body.appendChild(menu);
@@ -59,7 +59,7 @@ async function loadSearchEngines() {
 async function updateMenuButtons() {
   if (!miniMenu) return;
 
-  const buttonContainer = miniMenu.querySelector('.menu-buttons');
+  const buttonContainer = miniMenu.querySelector('.scm-menu-buttons');
   buttonContainer.innerHTML = '';
 
   // 복사 버튼
@@ -95,8 +95,8 @@ async function updateMenuButtons() {
 // 버튼 생성 헬퍼
 function createButton(icon, title, onClick) {
   const btn = document.createElement('button');
-  btn.className = 'menu-button';
-  btn.innerHTML = `<span class="button-icon">${icon}</span>`;
+  btn.className = 'scm-menu-button';
+  btn.innerHTML = `<span class="scm-button-icon">${icon}</span>`;
   btn.title = title;
   btn.addEventListener('click', onClick);
   return btn;

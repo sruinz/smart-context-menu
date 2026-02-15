@@ -18,13 +18,13 @@
   pointer-events: all;
 }
 
-.menu-buttons {
+.scm-menu-buttons {
   display: flex;
   gap: 4px;
   align-items: center;
 }
 
-.menu-button {
+.scm-menu-button {
   background: #2a2a2a;
   border: none;
   border-radius: 4px;
@@ -39,16 +39,16 @@
   height: 28px;
 }
 
-.menu-button:hover {
+.scm-menu-button:hover {
   background: #3a3a3a;
   transform: scale(1.05);
 }
 
-.menu-button:active {
+.scm-menu-button:active {
   transform: scale(0.95);
 }
 
-.button-icon {
+.scm-button-icon {
   font-size: 14px;
   line-height: 1;
 }
