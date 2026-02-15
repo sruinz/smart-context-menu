@@ -10,3 +10,9 @@ Gemini_Generated_Image_*.png
 # Screenshots and examples
 ex.jpg
 screenshot.png
+
+# Documentation (local only)
+docs/
+
+# Master icon source
+smart-context-menu/icon_master.png
